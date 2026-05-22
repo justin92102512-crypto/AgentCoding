@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="justin92102512-crypto | Premium Rose Gold & Pastel Interactive Portfolio">
+    <title>Justin's Developer Portfolio // Soft Rose Gold Edition</title>
+    
+    <!-- Google Fonts: Playfair Display (Serif) & Inter (Sans-serif) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-base: #FAF6F0;
+            --bg-gradient: linear-gradient(135deg, #FAF6F0 0%, #FFF0F2 100%);
+            --text-main: #2D3436;
+            --text-muted: #636E72;
+            
+            --rose-primary: #E8B4B8;
+            --rose-dark: #C98A90;
+            --rose-light: #FCEBEF;
+            --gold-primary: #D4A373;
+            --gold-light: #EFE5D9;
+            
+            --card-bg: rgba(255, 255, 255, 0.75);
+            --card-border: rgba(232, 180, 184, 0.25);
+            --card-shadow: 0 10px 30px rgba(232, 180, 184, 0.15);
+            --card-shadow-hover: 0 20px 40px rgba(201, 138, 144, 0.25);
+            
+            --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            --font-serif: 'Playfair Display', Georgia, serif;
+            --font-sans: 'Inter', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            background-image: var(--bg-gradient);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Organic Dynamic Floating Background Blobs */
+        .ambient-blobs {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.6;
+            mix-blend-mode: multiply;
+            animation: float 25s infinite alternate ease-in-out;
+        }
+
+        .blob-1 {
+            width: 500px;
+            height: 500px;
+            background-color: var(--rose-light);
+            top: -10%;
+            left: 10%;
+            animation-duration: 20s;
+        }
+
+        .blob-2 {
+            width: 600px;
+            height: 600px;
+            background-color: #EFE5D9;
+            bottom: -15%;
+            right: 5%;
+            animation-duration: 28s;
+        }
+
+        .blob-3 {
+            width: 400px;
+            height: 400px;
+            background-color: #FFE5EC;
+            top: 40%;
+            right: 25%;
+            animation-duration: 22s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0px, 0px) scale(1) rotate(0deg);
+            }
+            33% {
+                transform: translate(40px, -60px) scale(1.15) rotate(120deg);
+            }
+            66% {
+                transform: translate(-30px, 40px) scale(0.9) rotate(240deg);
+            }
+            100% {
+                transform: translate(0px, 0px) scale(1) rotate(360deg);
+            }
+        }
+
+        /* Container Layout */
+        .container {
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2.5rem 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Header Styles */
+        header.nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(232, 180, 184, 0.2);
+        }
+
+        .header-logo {
+            font-family: var(--font-serif);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .header-logo i {
+            color: var(--rose-dark);
+            font-size: 1.5rem;
+        }
+
+        .header-logo span {
+            font-style: italic;
+            font-weight: 400;
+            color: var(--gold-primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-btn {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            transition: var(--transition-smooth);
+            border: 1px solid transparent;
+        }
+
+        .nav-btn:hover {
+            color: var(--text-main);
+            background-color: rgba(255, 255, 255, 0.6);
+            border-color: rgba(232, 180, 184, 0.2);
+        }
+
+        .nav-btn.active {
+            background-color: var(--rose-primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(232, 180, 184, 0.4);
+        }
+
+        /* Bento Grid Grid Layout */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: 360px 1fr 340px;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        /* Glassmorphic Bento Cards */
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 2.2rem;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--card-shadow-hover);
+            border-color: rgba(232, 180, 184, 0.4);
+        }
+
+        /* Card Section Titles */
+        .section-title {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.8rem;
+            color: var(--text-main);
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--rose-primary);
+            border-radius: 2px;
+        }
+
+        /* Left Panel: Profile Detail Widget */
+        .profile-card {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-avatar-wrap {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-avatar {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--rose-primary) 0%, var(--gold-primary) 100%);
+            padding: 5px;
+            box-shadow: 0 10px 25px rgba(232, 180, 184, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .profile-avatar-inner {
+            background: #fff;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            color: var(--rose-dark);
+        }
+
+        .profile-badge {
+            position: absolute;
+            bottom: 0;
+            background: var(--gold-primary);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.9rem;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(212, 163, 115, 0.3);
+        }
+
+        .profile-name {
+            font-family: var(--font-serif);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-tagline {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1.8rem;
+            font-style: italic;
+        }
+
+        .profile-details {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px dashed rgba(232, 180, 184, 0.3);
+            font-size: 0.9rem;
+        }
+
+        .detail-lbl {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .detail-val {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .social-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: white;
+            border: 1px solid rgba(232, 180, 184, 0.2);
+            color: var(--rose-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            text-decoration: none;
+            transition: var(--transition-smooth);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+        }
+
+        .social-btn:hover {
+            background: var(--rose-primary);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(232, 180, 184, 0.3);
+        }
+
+        /* Center Panel: Interactive Repository Listing & Filter */
+        .center-panel {
+            grid-column: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        /* Search & Filter Bar */
+        .filter-card {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            padding: 1.8rem;
+        }
+
+        .search-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-wrapper i {
+            position: absolute;
+            left: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--rose-dark);
+            font-size: 1.1rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1rem 1.2rem 1rem 3rem;
+            border-radius: 16px;
+            border: 1px solid rgba(232, 180, 184, 0.3);
+            background: rgba(255, 255, 255, 0.9);
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            outline: none;
+            color: var(--text-main);
+            transition: var(--transition-smooth);
+        }
+
+        .search-input:focus {
+            border-color: var(--rose-primary);
+            box-shadow: 0 0 0 4px rgba(232, 180, 184, 0.15);
+            background: #fff;
+        }
+
+        .pill-filters {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .pill-btn {
+            background: white;
+            border: 1px solid rgba(232, 180, 184, 0.3);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .pill-btn:hover {
+            color: var(--text-main);
+            border-color: var(--rose-primary);
+            background: var(--rose-light);
+        }
+
+        .pill-btn.active {
+            background: var(--rose-primary);
+            color: white;
+            border-color: var(--rose-primary);
+            box-shadow: 0 4px 12px rgba(232, 180, 184, 0.3);
+        }
+
+        /* Repositories Grid Display */
+        .repos-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .repo-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 1.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            cursor: pointer;
+            position: relative;
+            transition: var(--transition-smooth);
+            box-shadow: var(--card-shadow);
+        }
+
+        .repo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-shadow-hover);
+            border-color: var(--rose-primary);
+        }
+
+        .repo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .repo-title {
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+            transition: var(--transition-smooth);
+        }
+
+        .repo-card:hover .repo-title {
+            color: var(--rose-dark);
+        }
+
+        .repo-icon-wrap {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: var(--rose-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--rose-dark);
+            font-size: 1.1rem;
+        }
+
+        .repo-desc {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            flex-grow: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .repo-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(232, 180, 184, 0.15);
+            padding-top: 0.8rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .repo-lang {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        .lang-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+        }
+
+        .lang-dot.js { background-color: #f1e05a; }
+        .lang-dot.jupyter { background-color: #da5b0b; }
+        .lang-dot.html { background-color: #e34c26; }
+
+        .repo-stars {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-weight: 500;
+        }
+
+        .repo-stars i {
+            color: var(--gold-primary);
+        }
+
+        /* Right Panel: Premium Radial Circular Skills Meter */
+        .skills-card {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .circular-skills-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 1.8rem;
+        }
+
+        .skill-circle-item {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .skill-dial {
+            position: relative;
+            width: 66px;
+            height: 66px;
+            border-radius: 50%;
+            background: conic-gradient(var(--rose-primary) var(--percent), #EFE5D9 var(--percent) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(232, 180, 184, 0.1);
+        }
+
+        .skill-dial-inner {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .skill-circle-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .skill-circle-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .skill-circle-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Diagnostic Tip Box */
+        .tip-box {
+            background: var(--rose-light);
+            border: 1px solid rgba(232, 180, 184, 0.3);
+            border-radius: 16px;
+            padding: 1.2rem;
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: #8C4E54;
+            line-height: 1.5;
+        }
+
+        .tip-box-title {
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Premium Modal Detail Inspector (Glassmorphic Slide-in) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(45, 52, 54, 0.25);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition-smooth);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--card-border);
+            border-radius: 30px;
+            max-width: 650px;
+            width: 90%;
+            padding: 2.5rem;
+            box-shadow: 0 30px 60px rgba(201, 138, 144, 0.3);
+            transform: scale(0.9) translateY(20px);
+            transition: var(--transition-smooth);
+            position: relative;
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 1.8rem;
+            right: 1.8rem;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--rose-light);
+            border: none;
+            color: var(--rose-dark);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: var(--transition-smooth);
+        }
+
+        .modal-close-btn:hover {
+            background: var(--rose-primary);
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            background: var(--rose-light);
+            color: var(--rose-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+        }
+
+        .modal-title-wrap h3 {
+            font-family: var(--font-serif);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .modal-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: var(--gold-light);
+            color: var(--gold-primary);
+            padding: 0.2rem 0.8rem;
+            border-radius: 50px;
+            margin-top: 0.25rem;
+        }
+
+        .modal-body {
+            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .modal-desc {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .modal-insights {
+            background: white;
+            border-radius: 16px;
+            padding: 1.2rem;
+            border: 1px solid rgba(232, 180, 184, 0.2);
+            font-size: 0.9rem;
+        }
+
+        .insight-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.6rem;
+            color: var(--text-main);
+        }
+
+        .insight-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .insight-item i {
+            color: var(--rose-dark);
+            width: 18px;
+        }
+
+        .modal-action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            width: 100%;
+            background: linear-gradient(135deg, var(--rose-primary) 0%, var(--rose-dark) 100%);
+            color: white;
+            text-decoration: none;
+            padding: 1rem;
+            border-radius: 16px;
+            font-weight: 600;
+            box-shadow: 0 10px 20px rgba(232, 180, 184, 0.4);
+            transition: var(--transition-smooth);
+        }
+
+        .modal-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(201, 138, 144, 0.5);
+        }
+
+        /* CSS Loading Transition Fade-in Overlay */
+        .fade-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 1rem;
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .fade-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--rose-light);
+            border-top: 3px solid var(--rose-primary);
+            border-radius: 50%;
+            animation: spin 1s infinite linear;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(232, 180, 184, 0.2);
+            padding: 1.8rem 1.5rem;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: auto;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1200px) {
+            .bento-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .center-panel {
+                grid-column: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .repos-grid {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                padding: 1.5rem 1rem;
+            }
+            header.nav-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Dynamic Fade-in Loader -->
+    <div class="fade-overlay" id="loading-mask">
+        <div class="spinner"></div>
+        <p style="font-family: var(--font-serif); font-style: italic; color: var(--rose-dark); font-size: 1.1rem; margin-top: 0.5rem;">
+            JustIn Gold Premium Dashboard Loading...
+        </p>
+    </div>
+
+    <!-- Background Ambient Gradient Blobs -->
+    <div class="ambient-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div class="container">
+        
+        <!-- Header Section -->
+        <header class="nav-header">
+            <a href="index2.html" class="header-logo">
+                <i class="fa-solid fa-gem"></i>
+                <div>JUSTIN<span>.PREMIUM</span></div>
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-btn"><i class="fa-solid fa-compass"></i> Cyber Dash</a>
+                <a href="index1.html" class="nav-btn"><i class="fa-solid fa-terminal"></i> Terminal CLI</a>
+                <a href="index2.html" class="nav-btn active"><i class="fa-solid fa-star"></i> Rose Gold</a>
+            </div>
+        </header>
+
+        <!-- Bento Grid Dashboard -->
+        <div class="bento-grid">
+            
+            <!-- Left Bento Column: Profile Card -->
+            <aside class="card profile-card">
+                <div class="profile-avatar-wrap">
+                    <div class="profile-avatar">
+                        <div class="profile-avatar-inner">
+                            <i class="fa-solid fa-code"></i>
+                        </div>
+                    </div>
+                    <div class="profile-badge">EXPERT CODER</div>
+                </div>
+                
+                <h2 class="profile-name">justin-crypto</h2>
+                <p class="profile-tagline">“Crafting intelligent automation with elegant aesthetics.”</p>
+                
+                <div class="profile-details">
+                    <div class="detail-row">
+                        <span class="detail-lbl">Operator Role</span>
+                        <span class="detail-val">Web3 & AI Developer</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-lbl">Workspace Host</span>
+                        <span class="detail-val">justin92102512-crypto</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-lbl">Development Base</span>
+                        <span class="detail-val">Taiwan (GMT+8)</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-lbl">Core Stack</span>
+                        <span class="detail-val">JS / Python / ML Labs</span>
+                    </div>
+                </div>
+
+                <div class="social-buttons">
+                    <a href="https://github.com/justin92102512-crypto" target="_blank" class="social-btn" title="GitHub Profile">
+                        <i class="fa-brands fa-github"></i>
+                    </a>
+                    <a href="https://github.com/justin92102512-crypto/AgentCoding" target="_blank" class="social-btn" title="AgentCoding Repository">
+                        <i class="fa-solid fa-folder-open"></i>
+                    </a>
+                    <a href="mailto:justin@agentcoding.example.com" class="social-btn" title="Email Operator">
+                        <i class="fa-solid fa-envelope"></i>
+                    </a>
+                </div>
+            </aside>
+
+            <!-- Center Bento Column: Core Interactive Portfolio Explorer -->
+            <main class="center-panel">
+                
+                <!-- Filter Section Card -->
+                <section class="card filter-card">
+                    <div class="search-wrapper">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="search-input" class="search-input" placeholder="搜尋儲存庫名稱或關鍵字描述..." oninput="filterRepos()">
+                    </div>
+                    <div class="pill-filters">
+                        <button class="pill-btn active" onclick="setFilter('all', this)">全部儲存庫</button>
+                        <button class="pill-btn" onclick="setFilter('javascript', this)">JavaScript</button>
+                        <button class="pill-btn" onclick="setFilter('jupyter', this)">Jupyter / Python</button>
+                        <button class="pill-btn" onclick="setFilter('html', this)">HTML / CSS</button>
+                    </div>
+                </section>
+
+                <!-- Repos Grid -->
+                <div class="repos-grid" id="repos-container">
+                    <!-- Repo items will be injected here dynamically by JavaScript -->
+                </div>
+            </main>
+
+            <!-- Right Bento Column: Skills & Technology Metrics -->
+            <aside class="card skills-card">
+                <h3 class="section-title">核心技能指標</h3>
+                
+                <div class="circular-skills-wrap">
+                    <!-- Skill Item 1 -->
+                    <div class="skill-circle-item">
+                        <div class="skill-dial" style="--percent: 90%;">
+                            <div class="skill-dial-inner">90%</div>
+                        </div>
+                        <div class="skill-circle-info">
+                            <div class="skill-circle-name">JavaScript & ES6</div>
+                            <div class="skill-circle-desc">互動網頁、UI動態整合</div>
+                        </div>
+                    </div>
+
+                    <!-- Skill Item 2 -->
+                    <div class="skill-circle-item">
+                        <div class="skill-dial" style="--percent: 85%;">
+                            <div class="skill-dial-inner">85%</div>
+                        </div>
+                        <div class="skill-circle-info">
+                            <div class="skill-circle-name">Python & Pandas</div>
+                            <div class="skill-circle-desc">資料科學、核心機器學習</div>
+                        </div>
+                    </div>
+
+                    <!-- Skill Item 3 -->
+                    <div class="skill-circle-item">
+                        <div class="skill-dial" style="--percent: 85%;">
+                            <div class="skill-dial-inner">85%</div>
+                        </div>
+                        <div class="skill-circle-info">
+                            <div class="skill-circle-name">Jupyter Analytics</div>
+                            <div class="skill-circle-desc">模型驗證與數據試驗</div>
+                        </div>
+                    </div>
+
+                    <!-- Skill Item 4 -->
+                    <div class="skill-circle-item">
+                        <div class="skill-dial" style="--percent: 70%;">
+                            <div class="skill-dial-inner">70%</div>
+                        </div>
+                        <div class="skill-circle-info">
+                            <div class="skill-circle-name">Web3 & Crypto Core</div>
+                            <div class="skill-circle-desc">智能合約與密碼學基礎</div>
+                        </div>
+                    </div>
+
+                    <!-- Skill Item 5 -->
+                    <div class="skill-circle-item">
+                        <div class="skill-dial" style="--percent: 95%;">
+                            <div class="skill-dial-inner">95%</div>
+                        </div>
+                        <div class="skill-circle-info">
+                            <div class="skill-circle-name">AI Agent Automation</div>
+                            <div class="skill-circle-desc">自主代理化工作流程</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <div class="tip-box-title">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <span>互動提示</span>
+                    </div>
+                    點擊任何儲存庫卡片，將開啟晶瑩高雅的 **詳情透視視窗**，查看專案代碼分析與 AI 深入點評。
+                </div>
+            </aside>
+
+        </div>
+
+        <!-- Dynamic Modal Detail Inspector Overlay -->
+        <div class="modal-overlay" id="repo-modal" onclick="closeModal(event)">
+            <div class="modal-card" onclick="event.stopPropagation()">
+                <button class="modal-close-btn" onclick="closeModalDirect()" title="關閉視窗">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <div class="modal-header">
+                    <div class="modal-avatar" id="modal-icon">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                    <div class="modal-title-wrap">
+                        <h3 id="modal-title">Repository Title</h3>
+                        <span class="modal-tag" id="modal-lang-tag">JavaScript</span>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-desc" id="modal-description">Detailed repository analysis and bio description here...</p>
+                    
+                    <div class="modal-insights">
+                        <h4 style="font-weight: 700; margin-bottom: 0.75rem; color: var(--rose-dark); font-size: 0.95rem;">
+                            <i class="fa-solid fa-chart-line"></i> 專案洞察與架構分析
+                        </h4>
+                        <div class="insight-item">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            <span id="modal-insight-1">結構安全性：已完成核心依賴掃描與前端安全防護配置。</span>
+                        </div>
+                        <div class="insight-item">
+                            <i class="fa-solid fa-bolt"></i>
+                            <span id="modal-insight-2">執行效能：採用高流暢度的 Vanilla 技術，保證 60 FPS 移動端體驗。</span>
+                        </div>
+                        <div class="insight-item">
+                            <i class="fa-solid fa-circle-nodes"></i>
+                            <span id="modal-insight-3">AI 整合度：已由自動化智能體完成了環境預配置及初始化。</span>
+                        </div>
+                    </div>
+                </div>
+                <a href="#" target="_blank" class="modal-action-btn" id="modal-link-btn">
+                    <span>瀏覽 GitHub 儲存庫源代碼</span>
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer Section -->
+        <footer>
+            <p>EXQUISITELY DESIGNED BY ANTIGRAVITY AI AGENT v2026 // STYLE: SOFT ROSE GOLD PREMIUM EDITION</p>
+            <p style="margin-top: 0.4rem; font-size: 0.75rem; opacity: 0.6;">All rights reserved. Powered by UI/UX Pro Max.</p>
+        </footer>
+
+    </div>
+
+    <!-- Application Script Logic -->
+    <script>
+        // 1. Repository Data Database definition
+        const reposData = [
+            {
+                id: "agentcoding",
+                name: "AgentCoding",
+                lang: "HTML / CSS",
+                langKey: "html",
+                desc: "一個由 AI 代理人獨立編寫、維護與自動部署的網頁自動化技術工作坊。完美融合了 cyberpunk 與軟粉玫瑰金多套設計系統，具備完整跨端響應與動態過濾機制。",
+                stars: 2,
+                url: "https://github.com/justin92102512-crypto/AgentCoding",
+                icon: "fa-solid fa-code-fork",
+                insights: [
+                    "核心工程：涵蓋 `index.html` (賽博玻璃態)、`index1.html` (極客終端機) 與 `index2.html` (優雅玫瑰金)。",
+                    "效能表現：完全採用原生高精度 HTML5 粒子系統與輕量化 DOM 操作，零依賴。",
+                    "智慧化：支持 AI Autonomous 代理管道，一鍵編譯與同步 Push 機制。"
+                ]
+            },
+            {
+                id: "ds-lab",
+                name: "-",
+                lang: "Jupyter",
+                langKey: "jupyter",
+                desc: "資料科學與核心機器學習實驗室作業與 Jupyter 筆記本。包含多重特徵工程、數據清洗、決策樹與神經網路演算法驗證模組，展現對高維數據特徵建模的嚴謹分析能力。",
+                stars: 1,
+                url: "https://github.com/justin92102512-crypto/-",
+                icon: "fa-solid fa-microscope",
+                insights: [
+                    "包含 4 個高含金量的 Jupyter Notebook 實踐作業與深度探索報告。",
+                    "利用 Pandas, NumPy, Scikit-Learn 等框架完成特徵值篩選與關聯度分析熱圖。",
+                    "內含精確調參（GridSearch）實現最優收斂精度的模型權重。"
+                ]
+            },
+            {
+                id: "lab-b12092202",
+                name: "-_-_B12092202_-",
+                lang: "JavaScript",
+                langKey: "javascript",
+                desc: "林奕廷 (Yi-Ting Lin) 的互動網頁前端與演算法實驗基地。展示多個精準 DOM 追蹤與動畫融合的互動效果，將演算法與視覺細節做高維度的美學串聯。",
+                stars: 1,
+                url: "https://github.com/justin92102512-crypto/-_-_B12092202_-",
+                icon: "fa-solid fa-cubes",
+                insights: [
+                    "前端互動：運用高頻事件監聽器，實踐微秒級的回饋粒子與指引過渡效果。",
+                    "程式設計：演算法邏輯嚴密，代碼架構層次分明，展現流暢的動畫交互體驗。",
+                    "美學配比：採用精緻的圓角容器結構，完美配合 UI/UX 主流美學比例。"
+                ]
+            },
+            {
+                id: "ai-core",
+                name: "AI-",
+                lang: "Jupyter",
+                langKey: "jupyter",
+                desc: "先行人工智慧核心演算、深度學習模型流水線與神經網絡權重調校實驗。全面涵蓋卷積神經網絡 (CNN) 與循環神經網絡 (RNN) 對時序及視覺圖像的特徵識別管線。",
+                stars: 1,
+                url: "https://github.com/justin92102512-crypto/AI-",
+                icon: "fa-solid fa-brain",
+                insights: [
+                    "深度學習：架構包含神經網絡前向傳播與反向誤差回傳 (Backprop) 核心實現。",
+                    "框架應用：整合 TensorFlow 與 PyTorch 深度神經元層級的代碼調用。",
+                    "AI 指點：由自主編程體引導的網絡模型評估，包含高精確度 ROC 曲線。"
+                ]
+            }
+        ];
+
+        let activeFilter = "all";
+        let searchQuery = "";
+
+        // 2. Load Page Transition overlay fade out
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const mask = document.getElementById('loading-mask');
+                mask.style.opacity = '0';
+                setTimeout(() => {
+                    mask.classList.add('hidden');
+                }, 800);
+            }, 600);
+            
+            // Initial render
+            renderRepositories();
+        });
+
+        // 3. Render Repositories Card Lists
+        function renderRepositories() {
+            const container = document.getElementById('repos-container');
+            container.innerHTML = "";
+
+            const filtered = reposData.filter(repo => {
+                const matchesLang = activeFilter === "all" || repo.langKey === activeFilter;
+                const matchesSearch = repo.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                      repo.desc.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                      repo.lang.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchesLang && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--text-muted);">
+                        <i class="fa-solid fa-folder-open" style="font-size: 2.5rem; color: var(--rose-primary); margin-bottom: 1rem;"></i>
+                        <p style="font-weight: 500;">未搜尋到匹配的儲存庫。請重新輸入關鍵字或重設過濾器。</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(repo => {
+                const card = document.createElement('article');
+                card.className = "repo-card";
+                card.onclick = () => openModal(repo);
+
+                card.innerHTML = `
+                    <div class="repo-header">
+                        <h4 class="repo-title">${repo.name}</h4>
+                        <div class="repo-icon-wrap">
+                            <i class="${repo.icon}"></i>
+                        </div>
+                    </div>
+                    <p class="repo-desc">${repo.desc}</p>
+                    <div class="repo-footer">
+                        <span class="repo-lang">
+                            <span class="lang-dot ${repo.langKey}"></span>
+                            <span>${repo.lang}</span>
+                        </span>
+                        <span class="repo-stars">
+                            <i class="fa-solid fa-star"></i>
+                            <span>${repo.stars} Stars</span>
+                        </span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // 4. Input Search Engine filter logic
+        function filterRepos() {
+            searchQuery = document.getElementById('search-input').value;
+            renderRepositories();
+        }
+
+        // 5. Button Filter tabs switching
+        function setFilter(filterType, element) {
+            activeFilter = filterType;
+            
+            // Switch active classes
+            document.querySelectorAll('.pill-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            element.classList.add('active');
+
+            renderRepositories();
+        }
+
+        // 6. Interactive Slide-in Modal Detail Dialog logic
+        const modal = document.getElementById('repo-modal');
+
+        function openModal(repo) {
+            document.getElementById('modal-title').textContent = repo.name;
+            document.getElementById('modal-lang-tag').textContent = repo.lang;
+            document.getElementById('modal-description').innerHTML = repo.desc;
+            
+            // Set dynamic insights
+            document.getElementById('modal-insight-1').innerHTML = `<strong>核心架構：</strong>` + repo.insights[0];
+            document.getElementById('modal-insight-2').innerHTML = `<strong>技術要點：</strong>` + repo.insights[1];
+            document.getElementById('modal-insight-3').innerHTML = `<strong>自動化特性：</strong>` + repo.insights[2];
+            
+            // Set direct Git links
+            document.getElementById('modal-link-btn').href = repo.url;
+            
+            // Change Modal Icon based on Language
+            const modalIcon = document.getElementById('modal-icon');
+            if (repo.langKey === 'javascript') {
+                modalIcon.innerHTML = '<i class="fa-brands fa-js" style="color: #f1e05a;"></i>';
+            } else if (repo.langKey === 'jupyter') {
+                modalIcon.innerHTML = '<i class="fa-solid fa-circle-nodes" style="color: #da5b0b;"></i>';
+            } else {
+                modalIcon.innerHTML = '<i class="fa-solid fa-code" style="color: var(--rose-dark);"></i>';
+            }
+
+            modal.classList.add('active');
+        }
+
+        function closeModal(event) {
+            if (event.target === modal) {
+                modal.classList.remove('active');
+            }
+        }
+
+        function closeModalDirect() {
+            modal.classList.remove('active');
+        }
+
+        // Auto Close modal on escape keypress
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModalDirect();
+            }
+        });
+    </script>
+</body>
+</html>
