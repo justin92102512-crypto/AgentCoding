@@ -1,0 +1,14 @@
+# Exclude sensitive environment configurations
+.env
+
+# Exclude local node dependency folder
+node_modules/
+
+# Exclude node package files that are not needed on production pages
+package.json
+package-lock.json
+
+# Exclude backend DB orchestration & provision scripts
+create_project.js
+get_projects.js
+setup_db.js
