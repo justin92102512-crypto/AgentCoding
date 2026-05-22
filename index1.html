@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="justin92102512-crypto | UI/UX Pro Max 終端機互動式開發者儀表板。">
+    <title>justin@agentcoding:~$ portfolio</title>
+    
+    <!-- Google Font: JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #050508;
+            --text-color: #33ff00;
+            --text-shadow: 0 0 5px rgba(51, 255, 0, 0.5), 0 0 10px rgba(51, 255, 0, 0.2);
+            --border-color: #33ff00;
+            --border-light: rgba(51, 255, 0, 0.25);
+            --accent-color: #00f2fe;
+            --accent-shadow: 0 0 5px rgba(0, 242, 254, 0.5);
+            
+            --font-mono: 'JetBrains Mono', monospace;
+            --transition-speed: 0.2s;
+        }
+
+        /* Cyberpunk Theme */
+        [data-theme="cyber"] {
+            --text-color: #00f2fe;
+            --text-shadow: 0 0 5px rgba(0, 242, 254, 0.5), 0 0 10px rgba(0, 242, 254, 0.2);
+            --border-color: #7f00ff;
+            --border-light: rgba(127, 0, 255, 0.35);
+            --accent-color: #ff007f;
+            --accent-shadow: 0 0 5px rgba(255, 0, 127, 0.5);
+        }
+
+        /* Amber Theme */
+        [data-theme="amber"] {
+            --text-color: #ffb000;
+            --text-shadow: 0 0 5px rgba(255, 176, 0, 0.5), 0 0 10px rgba(255, 176, 0, 0.2);
+            --border-color: #ffb000;
+            --border-light: rgba(255, 176, 0, 0.25);
+            --accent-color: #ff5500;
+            --accent-shadow: 0 0 5px rgba(255, 85, 0, 0.5);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            text-shadow: var(--text-shadow);
+            font-family: var(--font-mono);
+            font-size: 14px;
+            line-height: 1.4;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* CRT Screen Scanline Overlay */
+        .crt-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+            background-size: 100% 4px;
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        /* CRT Flicker */
+        @keyframes crt-flicker {
+            0% { opacity: 0.978; }
+            50% { opacity: 0.985; }
+            100% { opacity: 0.975; }
+        }
+
+        .crt-flicker-wrap {
+            animation: crt-flicker 0.15s infinite;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Matrix Digital Rain Canvas */
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.15;
+            pointer-events: none;
+            transition: opacity 1s ease;
+        }
+
+        /* Container */
+        .dashboard-container {
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 1rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* Top Status Bar */
+        header.cli-header {
+            border: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.6);
+            padding: 0.75rem 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-title {
+            font-weight: 700;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 12px;
+        }
+
+        .status-node {
+            color: var(--accent-color);
+            text-shadow: var(--accent-shadow);
+        }
+
+        /* Bento ASCII Grid Layout */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr 300px;
+            gap: 1rem;
+            flex-grow: 1;
+        }
+
+        /* Bento Cards (Terminal Modules) */
+        .cli-module {
+            border: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.75);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .module-header {
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.5rem 1rem;
+            background: var(--border-light);
+            font-weight: 700;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .module-btn-group {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .module-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+        }
+
+        .module-dot.filled {
+            background-color: var(--text-color);
+        }
+
+        .module-body {
+            padding: 1.2rem;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        /* Profile details widgets */
+        .profile-widget {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .avatar-wrap {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .avatar-ascii {
+            display: inline-block;
+            font-family: monospace;
+            font-size: 8px;
+            line-height: 1.1;
+            white-space: pre;
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+        }
+
+        .widget-row {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dashed var(--border-light);
+            padding-bottom: 0.3rem;
+            font-size: 13px;
+        }
+
+        .row-val {
+            font-weight: 700;
+            color: var(--accent-color);
+            text-shadow: var(--accent-shadow);
+        }
+
+        /* Live Terminal Module (Center Panel) */
+        .terminal-module {
+            grid-column: 2;
+            height: 650px;
+        }
+
+        .terminal-body {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 1.5rem;
+            font-size: 13px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        .terminal-output {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            white-space: pre-wrap;
+        }
+
+        .terminal-log-row {
+            margin-bottom: 0.4rem;
+        }
+
+        .terminal-prompt-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .prompt-lbl {
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .prompt-input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-color);
+            text-shadow: var(--text-shadow);
+            font-family: var(--font-mono);
+            font-size: 13px;
+            width: 100%;
+        }
+
+        /* Blinking terminal cursor */
+        .cursor-blink {
+            display: inline-block;
+            width: 8px;
+            height: 15px;
+            background: var(--text-color);
+            box-shadow: var(--text-shadow);
+            animation: cursor-blink-anim 1s infinite;
+            vertical-align: middle;
+            margin-left: 2px;
+        }
+
+        @keyframes cursor-blink-anim {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        /* Skill widgets */
+        .skill-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .skill-item {
+            font-size: 12px;
+        }
+
+        .skill-lbl-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+        }
+
+        .skill-bar {
+            border: 1px solid var(--border-color);
+            height: 14px;
+            position: relative;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .skill-fill {
+            background: var(--text-color);
+            height: 100%;
+            width: 0%;
+            transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Boot Splash Overlay */
+        .boot-splash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 10000;
+            padding: 3rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .boot-splash.hidden {
+            display: none;
+        }
+
+        /* ASCII Art styles */
+        .ascii-art {
+            white-space: pre;
+            font-family: monospace;
+            font-size: 10px;
+            line-height: 1.1;
+            margin: 0.5rem 0;
+            color: var(--accent-color);
+            text-shadow: var(--accent-shadow);
+        }
+
+        /* General Links inside CLI */
+        a.cli-link {
+            color: var(--accent-color);
+            text-shadow: var(--accent-shadow);
+            text-decoration: none;
+            border-bottom: 1px dashed var(--accent-color);
+            transition: var(--transition-speed);
+        }
+
+        a.cli-link:hover {
+            color: var(--text-color);
+            border-bottom-style: solid;
+        }
+
+        /* Theme Config button */
+        .theme-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            text-shadow: var(--text-shadow);
+            font-family: var(--font-mono);
+            font-size: 11px;
+            padding: 0.2rem 0.5rem;
+            cursor: pointer;
+            transition: var(--transition-speed);
+        }
+
+        .theme-btn:hover {
+            background: var(--border-light);
+        }
+
+        /* Responsive Grid overrides */
+        @media (max-width: 1100px) {
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+            .terminal-module {
+                grid-column: 1;
+                height: 500px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            body {
+                font-size: 12px;
+            }
+            .header-stats {
+                display: none;
+            }
+            .boot-splash {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CRT Visual effects overlay -->
+    <div class="crt-overlay"></div>
+
+    <div class="crt-flicker-wrap">
+        
+        <!-- Matrix Falling digital rain canvas background -->
+        <canvas id="matrix-canvas"></canvas>
+
+        <!-- Dynamic Boot Sequence terminal sequence -->
+        <div class="boot-splash" id="boot-overlay">
+            <div id="boot-log"></div>
+        </div>
+
+        <div class="dashboard-container">
+            
+            <!-- Dashboard Top header status bar -->
+            <header class="cli-header">
+                <div class="header-title">
+                    <i class="fa-solid fa-terminal"></i>
+                    <span>JUSTIN_CLI_OS v2.5.0 // CORE: AGENT_CODER</span>
+                </div>
+                <div class="header-stats">
+                    <div>STATUS: <span class="status-node">[ ONLINE ]</span></div>
+                    <div>SECURE: <span style="color: #00ff7f;">[ SSL_ACTIVE ]</span></div>
+                    <div>PING: <span id="header-ping">15ms</span></div>
+                    <div>LOC: <span style="color: var(--accent-color);">127.0.0.1</span></div>
+                </div>
+                <div>
+                    <button class="theme-btn" id="cycle-theme-btn" onclick="cycleTheme()">
+                        <i class="fa-solid fa-palette"></i> CYCLE_THEME
+                    </button>
+                </div>
+            </header>
+
+            <!-- Bento Dashboard Panels -->
+            <div class="bento-grid">
+                
+                <!-- Left Panel: Profile Detail Widget -->
+                <aside class="cli-module">
+                    <div class="module-header">
+                        <span>MODULE // HOST_PROFILE.SYS</span>
+                        <div class="module-btn-group">
+                            <div class="module-dot"></div>
+                            <div class="module-dot"></div>
+                            <div class="module-dot filled"></div>
+                        </div>
+                    </div>
+                    <div class="module-body profile-widget">
+                        <div class="avatar-wrap">
+                            <div class="avatar-ascii">
+    .-''''-.
+   /        \
+  |  __  __  |
+  | (o)  (o) |
+  |    __    |
+   \  `=='  /
+    `-....-'
+  [ JUSTIN.EXE ]
+                            </div>
+                        </div>
+                        <div class="widget-row">
+                            <span>OPERATOR:</span>
+                            <span class="row-val">justin-crypto</span>
+                        </div>
+                        <div class="widget-row">
+                            <span>ROLE:</span>
+                            <span class="row-val">Web3 & AI Dev</span>
+                        </div>
+                        <div class="widget-row">
+                            <span>PLATFORM:</span>
+                            <span class="row-val">Windows // Nodev20</span>
+                        </div>
+                        <div class="widget-row">
+                            <span>LOCATION:</span>
+                            <span class="row-val">Taiwan (GMT+8)</span>
+                        </div>
+                        <div class="widget-row">
+                            <span>CODENAME:</span>
+                            <span class="row-val">AgentCoding</span>
+                        </div>
+                        
+                        <div style="margin-top: 1rem; border-top: 1px dashed var(--border-color); padding-top: 1rem; font-size: 11px;">
+                            <div style="font-weight: 700; margin-bottom: 0.5rem;">[ DIAGNOSTIC METERS ]</div>
+                            <div style="margin-bottom: 0.5rem;">
+                                <span>CPU CORE LOAD</span>
+                                <div style="border: 1px solid var(--border-color); height: 8px; margin-top: 0.25rem;">
+                                    <div style="background: var(--text-color); width: 42%; height: 100%;" id="cpu-bar"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <span>MEM CAPACITY</span>
+                                <div style="border: 1px solid var(--border-color); height: 8px; margin-top: 0.25rem;">
+                                    <div style="background: var(--accent-color); width: 68%; height: 100%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Center Panel: Live Terminal Console -->
+                <main class="cli-module terminal-module">
+                    <div class="module-header">
+                        <span>INTERACTIVE // JUSTIN_SHELL.SH</span>
+                        <div style="color: var(--accent-color);">justin@agentcoding:~$</div>
+                    </div>
+                    <div class="module-body terminal-body" id="term-body">
+                        
+                        <div class="terminal-output" id="term-output">
+                            <!-- Welcome console messages printed dynamically -->
+                        </div>
+                        
+                        <!-- Console dynamic prompt input line -->
+                        <div class="terminal-prompt-row">
+                            <span class="prompt-lbl">justin@agentcoding:~$</span>
+                            <input type="text" id="term-input-field" class="prompt-input" autocomplete="off" autofocus spellcheck="false">
+                        </div>
+                    </div>
+                </main>
+
+                <!-- Right Panel: Core Skills Widget -->
+                <aside class="cli-module">
+                    <div class="module-header">
+                        <span>MODULE // TECH_METRICS.SYS</span>
+                        <div class="module-btn-group">
+                            <div class="module-dot"></div>
+                            <div class="module-dot filled"></div>
+                            <div class="module-dot filled"></div>
+                        </div>
+                    </div>
+                    <div class="module-body skill-list">
+                        <div class="skill-item">
+                            <div class="skill-lbl-row">
+                                <span>JavaScript ES6 / HTML5</span>
+                                <span class="row-val">90%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-fill" data-pct="90"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-lbl-row">
+                                <span>Python / PyTorch / Pandas</span>
+                                <span class="row-val">85%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-fill" data-pct="85"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-lbl-row">
+                                <span>Jupyter Notebook / Data Labs</span>
+                                <span class="row-val">85%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-fill" data-pct="85"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-lbl-row">
+                                <span>Web3 / Blockchain Core</span>
+                                <span class="row-val">70%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-fill" data-pct="70"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-lbl-row">
+                                <span>AI Agent Automations</span>
+                                <span class="row-val">95%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-fill" data-pct="95"></div></div>
+                        </div>
+                        
+                        <div style="border: 1px dashed var(--border-color); padding: 0.8rem; margin-top: 1rem; font-size: 11px;">
+                            <div style="font-weight: 700; margin-bottom: 0.3rem; color: var(--accent-color);">[ PRO TIP ]</div>
+                            輸入指令 <span style="font-weight: 700; color: white;">repos</span> 以列出當前託管的所有 GitHub 倉庫，或輸入 <span style="font-weight: 700; color: white;">matrix</span> 來開啟/關閉數位下雨粒子背景。
+                        </div>
+                    </div>
+                </aside>
+
+            </div>
+
+            <!-- Footer status strip -->
+            <footer style="border: 1px solid var(--border-color); background: rgba(0, 0, 0, 0.6); padding: 0.6rem 1.2rem; display: flex; justify-content: space-between; align-items: center; font-size: 11px; flex-wrap: wrap; gap: 1rem;">
+                <div>[SYSTEM STAT: NORMAL]</div>
+                <div>AUTONOMOUSLY GENERATED & INSTALLED BY ANTIGRAVITY AI AGENT v2026 // STYLE: UI/UX PRO MAX</div>
+                <div>PORT: 443 // SECURITY: HIGH</div>
+            </footer>
+
+        </div>
+    </div>
+
+    <script>
+        // 1. Theme Configuration Logic
+        const themes = ["classic", "cyber", "amber"];
+        let currentThemeIndex = 0;
+
+        function cycleTheme() {
+            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+            const chosenTheme = themes[currentThemeIndex];
+            
+            if (chosenTheme === "classic") {
+                document.body.removeAttribute("data-theme");
+            } else {
+                document.body.setAttribute("data-theme", chosenTheme);
+            }
+            
+            printToTerminal(`\n[SYSTEM] Theme environment adjusted to: [ ${chosenTheme.toUpperCase()} ]\n`);
+        }
+
+        // 2. Skill Progress bar fill trigger
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.querySelectorAll('.skill-fill').forEach(fill => {
+                    const pct = fill.getAttribute('data-pct');
+                    fill.style.width = pct + '%';
+                });
+            }, 2500); // Trigger animation after boot sequence finishes
+        });
+
+        // 3. Simulated Host Metrics updater
+        setInterval(() => {
+            const pingVal = Math.floor(Math.random() * 15) + 8;
+            document.getElementById('header-ping').textContent = pingVal + "ms";
+            
+            const cpuVal = Math.floor(Math.random() * 30) + 15;
+            document.getElementById('cpu-bar').style.width = cpuVal + "%";
+        }, 3000);
+
+        // 4. Matrix Digital Rain Logic
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        const katakana = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const alphabet = katakana.split('');
+
+        const fontSize = 16;
+        let columns = width / fontSize;
+
+        let rainDrops = [];
+
+        function initMatrix() {
+            columns = width / fontSize;
+            rainDrops = [];
+            for (let x = 0; x < columns; x++) {
+                rainDrops[x] = 1;
+            }
+        }
+
+        initMatrix();
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(5, 5, 8, 0.05)';
+            ctx.fillRect(0, 0, width, height);
+
+            // Fetch current text theme color
+            let rainColor = '#33ff00';
+            const currentTheme = document.body.getAttribute('data-theme');
+            if (currentTheme === 'cyber') rainColor = '#00f2fe';
+            if (currentTheme === 'amber') rainColor = '#ffb000';
+
+            ctx.fillStyle = rainColor;
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < rainDrops.length; i++) {
+                const text = alphabet[Math.floor(Math.random() * alphabet.length)];
+                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+
+                if (rainDrops[i] * fontSize > height && Math.random() > 0.975) {
+                    rainDrops[i] = 0;
+                }
+                rainDrops[i]++;
+            }
+        }
+
+        let matrixInterval = setInterval(drawMatrix, 30);
+        let matrixActive = true;
+
+        function toggleMatrix() {
+            if (matrixActive) {
+                clearInterval(matrixInterval);
+                ctx.clearRect(0, 0, width, height);
+                canvas.style.opacity = '0';
+                matrixActive = false;
+                printToTerminal("\n[SYSTEM] Matrix Digital Rain background: [ SHUTDOWN ]\n");
+            } else {
+                canvas.style.opacity = '0.15';
+                matrixInterval = setInterval(drawMatrix, 30);
+                matrixActive = true;
+                printToTerminal("\n[SYSTEM] Matrix Digital Rain background: [ ACTIVE ]\n");
+            }
+        }
+
+        // 5. Interactive Terminal Prompt Console Logic
+        const termOutput = document.getElementById('term-output');
+        const termInput = document.getElementById('term-input-field');
+        const termBody = document.getElementById('term-body');
+
+        // Keep prompt input focused
+        termBody.addEventListener('click', () => {
+            termInput.focus();
+        });
+
+        // Prints lines immediately to terminal log
+        function printToTerminal(text, delayPrint = false) {
+            const div = document.createElement('div');
+            div.className = 'terminal-log-row';
+            
+            // Format colors or highlights inside logs
+            let formattedText = text
+                .replace(/\[SYSTEM\]/g, '<span style="color: var(--accent-color);">[SYSTEM]</span>')
+                .replace(/\[SUCCESS\]/g, '<span style="color: #00ff7f;">[SUCCESS]</span>')
+                .replace(/\[ERROR\]/g, '<span style="color: #ff3333;">[ERROR]</span>')
+                .replace(/justin@agentcoding:~\$/g, '<span style="color: var(--text-color); font-weight:700;">justin@agentcoding:~$</span>');
+            
+            div.innerHTML = formattedText;
+            termOutput.appendChild(div);
+            termBody.scrollTop = termBody.scrollHeight;
+        }
+
+        // Welcome print sequence
+        function printWelcomeMessage() {
+            const welcome = `===============================================================
+    _ _  _ ____ ___ _ _  _    ____ _    _ 
+    | |  | [__   |  | |\ |    |    |    | 
+  \_| |__| ___]  |  | | \|    |___ |___ | 
+                                          
+  INTERACTIVE PROTOCOL SHELL v2.5.0 // PORTFOLIO INJECTOR
+  Designed & Powered by UI/UX Pro Max Dynamic Engine
+===============================================================
+  系統已初始化完畢。當前連線用戶：justin-crypto
+
+  👉 輸入 <span style="color: white; font-weight:700;">help</span> 可取得可用終端機指令列表。
+  👉 雙擊本視窗內任何位置均可重新鎖定輸入焦點。
+`;
+            printToTerminal(welcome);
+        }
+
+        // Available terminal commands mapping
+        const commands = {
+            help: () => {
+                return `可用指令列表：
+  -------------------------------------------------------------
+  <span style="color: white; font-weight:700;">about</span>     顯示開發者 operator 的詳細個人資歷與核心簡介。
+  <span style="color: white; font-weight:700;">repos</span>     提取並渲染展示 4 個核心 GitHub 儲存庫及統計。
+  <span style="color: white; font-weight:700;">skills</span>    列出當前主要的程式語言技能與精通進度儀表板。
+  <span style="color: white; font-weight:700;">matrix</span>    開關動態 Matrix 數位雨代碼粒子背景 (當前: ${matrixActive ? '啟動' : '關閉'})。
+  <span style="color: white; font-weight:700;">theme</span>     循環切換系統配色風格 (經典綠 / 賽博藍 / 廢土橙)。
+  <span style="color: white; font-weight:700;">clear</span>     清除當前終端機的所有輸出紀錄。
+  <span style="color: white; font-weight:700;">index</span>     回退到主頁視覺版本 (index.html)。
+  -------------------------------------------------------------`;
+            },
+            about: () => {
+                return `[OPERATOR PROFILE]
+  -------------------------------------------------------------
+  代號      : justin92102512-crypto
+  角色職責  : 區塊鏈 Web3 應用開發、機器學習模型微調與大語言模型代理架構
+  技術追求  : 致力於以高度自動化流程實踐現代軟體架構，結合 AI 生態探索
+  工作核心  : 精通 Jupyter Labs 用於機器學習演算法驗證，並擅長現代 JS 前端開發
+
+  "科技是通往未來世界的加密鑰匙，而代碼是唯一的信仰。"
+  -------------------------------------------------------------`;
+            },
+            skills: () => {
+                return `[CORE TECH MATRIX SKILLS]
+  -------------------------------------------------------------
+  JavaScript/Frontend  : [██████████████░░] 90% (ES6/Vanilla CSS)
+  Python/Data Science  : [█████████████░░░] 85% (Pandas, NumPy, Scikit)
+  Jupyter Data Labs    : [█████████████░░░] 85% (Model Training, ML)
+  Web3 / Smart Contract: [██████████░░░░░░] 70% (DApps & Cryptography)
+  AI Agent Automation  : [███████████████░] 95% (Autonomous Coding Pipelines)
+  -------------------------------------------------------------`;
+            },
+            repos: () => {
+                return `+-----------------------------------------------------------+
+|               GitHub Repositories 展示清單                  |
++-----------------------------------------------------------+
+|                                                           |
+| 1. [NEW] <a class="cli-link" href="https://github.com/justin92102512-crypto/AgentCoding" target="_blank">AgentCoding</a> [HTML / CSS / JS]                         |
+|    - 一個由 AI 代理人獨立編寫與更新的前端自動化工作坊。     |
+|                                                           |
+| 2. <a class="cli-link" href="https://github.com/justin92102512-crypto/-" target="_blank">- (Data Science Homework & Notebooks)</a> [Jupyter]      |
+|    - 包含 4 個核心 Jupyter Notebook 資料科學與機器學習作業。|
+|                                                           |
+| 3. <a class="cli-link" href="https://github.com/justin92102512-crypto/-_-_B12092202_-" target="_blank">-_-_B12092202_-</a> [JavaScript]                             |
+|    - 林奕廷 (Yi-Ting Lin) 的互動網頁前端與演算法實驗基地。  |
+|                                                           |
+| 4. <a class="cli-link" href="https://github.com/justin92102512-crypto/AI-" target="_blank">AI-</a> [Jupyter Notebook]                                     |
+|    - 先行人工智慧演算法、神經網路架構與深度學習模型流水線。|
+|                                                           |
++-----------------------------------------------------------+`;
+            },
+            matrix: () => {
+                toggleMatrix();
+                return ``;
+            },
+            theme: () => {
+                cycleTheme();
+                return ``;
+            },
+            clear: () => {
+                termOutput.innerHTML = '';
+                return ``;
+            },
+            index: () => {
+                window.location.href = "index.html";
+                return `Redirecting to main portfolio...`;
+            }
+        };
+
+        // Term Input Listener
+        termInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const rawInput = termInput.value;
+                const cmdClean = rawInput.trim().toLowerCase();
+                
+                // Print command prompt line first
+                printToTerminal(`justin@agentcoding:~$ ${rawInput}`);
+                
+                if (cmdClean !== '') {
+                    if (commands[cmdClean]) {
+                        const out = commands[cmdClean]();
+                        if (out !== '') {
+                            printToTerminal(out);
+                        }
+                    } else {
+                        printToTerminal(`[ERROR] Command not found: '${cmdClean}'. Type 'help' for support.`);
+                    }
+                }
+                
+                // Reset and scroll
+                termInput.value = '';
+                termBody.scrollTop = termBody.scrollHeight;
+            }
+        });
+
+        // 6. Dynamic Boot Sequence animation logic
+        const bootLog = document.getElementById('boot-log');
+        const bootOverlay = document.getElementById('boot-overlay');
+        
+        const bootLogs = [
+            "Initializing JUSTIN_OS secure boot sequence...",
+            "Loading Linux kernel 6.8.0-45-generic on x86_64...",
+            "Checking RAM allocation: 32768MB system memory detected... [ OK ]",
+            "Mounting /dev/sda1 on /root... [ SUCCESS ]",
+            "Configuring local networking: IPv4 static 127.0.0.1... [ OK ]",
+            "Connecting to remote host API: api.github.com...",
+            "Fetching public profiles for operator: justin92102512-crypto...",
+            "Analyzing remote repositories: 4 data blocks mapped... [ DONE ]",
+            "  -> AgentCoding (active host repository detected)",
+            "  -> - (Data Science Homework mapped)",
+            "  -> -_-_B12092202_- (Frontend Interactive Lab mapped)",
+            "  -> AI- (Deep Neural pipeline model files mapped)",
+            "Decrypting cryptography protocols and credentials... [ SUCCESS ]",
+            "Loading UI/UX Pro Max terminal design assets...",
+            "  -> Google Fonts pairing: 'JetBrains Mono' loaded successfully",
+            "  -> Dynamic background particle systems: Canvas digital rain pre-seeded",
+            "  -> Staging scanline rendering layer (CRT filter v2.0)...",
+            "Compiling core stylesheet directives... [ 100% SUCCESS ]",
+            "UNLOCKING PORTFOLIO OS INTERACTIVE DASHBOARD...",
+            "BOOT SEQUENCE COMPLETE. WELCOME OPERATOR."
+        ];
+
+        let logIndex = 0;
+        function printBootLog() {
+            if (logIndex < bootLogs.length) {
+                const line = document.createElement('div');
+                
+                // Colorize logs in boot sequence
+                let text = bootLogs[logIndex]
+                    .replace(/\[ OK \]/g, '<span style="color: #00ff7f;">[ OK ]</span>')
+                    .replace(/\[ SUCCESS \]/g, '<span style="color: #00ff7f;">[ SUCCESS ]</span>')
+                    .replace(/\[ DONE \]/g, '<span style="color: var(--accent-color);">[ DONE ]</span>');
+                
+                line.innerHTML = `<span style="color: #9c9c9c;">[ ${new Date().toISOString()} ]</span> ` + text;
+                bootLog.appendChild(line);
+                bootOverlay.scrollTop = bootOverlay.scrollHeight;
+                
+                logIndex++;
+                // Simulated variable speed diagnostic load
+                setTimeout(printBootLog, Math.random() * 80 + 30);
+            } else {
+                // Fade out boot overlay
+                setTimeout(() => {
+                    bootOverlay.style.opacity = '0';
+                    bootOverlay.style.transition = 'opacity 0.8s ease';
+                    setTimeout(() => {
+                        bootOverlay.classList.add('hidden');
+                        printWelcomeMessage();
+                        termInput.focus();
+                    }, 800);
+                }, 800);
+            }
+        }
+
+        // Start Boot Sequence
+        printBootLog();
+    </script>
+</body>
+</html>
