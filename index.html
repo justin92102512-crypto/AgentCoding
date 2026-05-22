@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="justin92102512-crypto 的個人 GitHub 專案展示儀表板。探索區塊鏈、人工智慧與網頁自動化的開發旅程。">
+    <title>justin92102512-crypto | Cyber Portfolio</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #05050d;
+            --card-bg: rgba(13, 13, 33, 0.45);
+            --card-border: rgba(255, 255, 255, 0.07);
+            --card-border-glow: rgba(0, 242, 254, 0.35);
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            
+            /* Neon Gradients */
+            --accent-cyan: #00f2fe;
+            --accent-purple: #7f00ff;
+            --accent-pink: #ff007f;
+            
+            --grad-cyan-purple: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-purple) 100%);
+            --grad-pink-purple: linear-gradient(135deg, var(--accent-pink) 0%, var(--accent-purple) 100%);
+            --grad-cyber: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple), var(--accent-pink));
+            
+            --font-title: 'Outfit', sans-serif;
+            --font-body: 'Plus Jakarta Sans', sans-serif;
+            
+            --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Cyber Neon theme variant */
+        [data-theme="cyber"] {
+            --bg-color: #0b0214;
+            --card-bg: rgba(30, 4, 56, 0.5);
+            --card-border: rgba(255, 0, 127, 0.15);
+            --card-border-glow: rgba(255, 0, 127, 0.5);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #05050d;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-purple);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-cyan);
+        }
+
+        /* Mesh Gradient Background */
+        .background-mesh {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
+            background: radial-gradient(circle at 10% 20%, rgba(13, 10, 45, 1) 0%, rgba(5, 5, 13, 1) 90%);
+        }
+
+        .background-mesh::before {
+            content: "";
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            top: -200px;
+            left: -200px;
+            background: radial-gradient(circle, rgba(0, 242, 254, 0.08) 0%, transparent 70%);
+            filter: blur(80px);
+            animation: floatGlow 15s infinite alternate ease-in-out;
+        }
+
+        .background-mesh::after {
+            content: "";
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            bottom: -200px;
+            right: -200px;
+            background: radial-gradient(circle, rgba(255, 0, 127, 0.08) 0%, transparent 70%);
+            filter: blur(80px);
+            animation: floatGlow 20s infinite alternate-reverse ease-in-out;
+        }
+
+        @keyframes floatGlow {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(100px, 50px) scale(1.1); }
+        }
+
+        /* Canvas Particle Background */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            position: relative;
+        }
+
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            margin-bottom: 3.5rem;
+        }
+
+        .logo {
+            font-family: var(--font-title);
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--grad-cyan-purple);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .theme-toggle, .social-icon-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .theme-toggle:hover, .social-icon-btn:hover {
+            background: var(--grad-cyan-purple);
+            border-color: transparent;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.2);
+        }
+
+        /* Hero Profile Card */
+        .profile-hero {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transition: var(--transition-smooth);
+        }
+
+        .profile-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--grad-cyber);
+        }
+
+        .profile-avatar-container {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            background-image: var(--grad-cyan-purple);
+            background-origin: border-box;
+            background-clip: content-box, border-box;
+            padding: 4px;
+            box-shadow: 0 10px 30px rgba(0, 242, 254, 0.3);
+            transition: var(--transition-smooth);
+        }
+
+        .profile-avatar-container:hover .profile-avatar {
+            transform: rotate(5deg) scale(1.05);
+            box-shadow: 0 15px 40px rgba(255, 0, 127, 0.4);
+        }
+
+        .profile-info {
+            flex-grow: 1;
+        }
+
+        .profile-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            background: rgba(0, 242, 254, 0.08);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            color: var(--accent-cyan);
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .profile-name {
+            font-family: var(--font-title);
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #ffffff, #d1d5db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .profile-bio {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            max-width: 600px;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-val {
+            font-family: var(--font-title);
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .stat-lbl {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-val-gradient-1 {
+            background: var(--grad-cyan-purple);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-val-gradient-2 {
+            background: var(--grad-pink-purple);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Section Header & Search Filters */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .section-title {
+            font-family: var(--font-title);
+            font-size: 2rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-title i {
+            color: var(--accent-cyan);
+            text-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+        }
+
+        .search-filter-box {
+            display: flex;
+            gap: 1rem;
+            flex-grow: 1;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .search-wrapper {
+            position: relative;
+            flex-grow: 1;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 0.8rem 1rem 0.8rem 2.8rem;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            transition: var(--transition-smooth);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            background: rgba(0, 242, 254, 0.02);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.15);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            pointer-events: none;
+        }
+
+        .filter-btn-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            font-weight: 500;
+        }
+
+        .filter-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .filter-btn.active {
+            background: var(--grad-cyan-purple);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 5px 15px rgba(0, 242, 254, 0.25);
+        }
+
+        /* Repositories Grid */
+        .repos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 2rem;
+            margin-bottom: 5rem;
+        }
+
+        /* Repo Card */
+        .repo-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 2.2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 320px;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition-smooth);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .repo-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top right, rgba(0, 242, 254, 0.06) 0%, transparent 60%);
+            opacity: 0;
+            transition: var(--transition-smooth);
+            pointer-events: none;
+        }
+
+        .repo-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            border-color: var(--card-border-glow);
+            box-shadow: 0 15px 40px rgba(0, 242, 254, 0.15);
+        }
+
+        .repo-card:hover::after {
+            opacity: 1;
+        }
+
+        .repo-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .repo-badge-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .lang-badge {
+            font-size: 0.75rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .lang-js {
+            background: rgba(247, 223, 30, 0.1);
+            color: #f7df1e;
+            border: 1px solid rgba(247, 223, 30, 0.25);
+        }
+
+        .lang-jupyter {
+            background: rgba(243, 118, 38, 0.1);
+            color: #f37626;
+            border: 1px solid rgba(243, 118, 38, 0.25);
+        }
+
+        .lang-web {
+            background: rgba(0, 242, 254, 0.1);
+            color: #00f2fe;
+            border: 1px solid rgba(0, 242, 254, 0.25);
+        }
+
+        .lang-unknown {
+            background: rgba(156, 163, 175, 0.1);
+            color: #9ca3af;
+            border: 1px solid rgba(156, 163, 175, 0.2);
+        }
+
+        .repo-icon-wrap {
+            color: var(--text-secondary);
+            font-size: 1.3rem;
+        }
+
+        .repo-card:hover .repo-icon-wrap {
+            color: var(--accent-cyan);
+            transform: scale(1.1);
+            transition: var(--transition-smooth);
+        }
+
+        .repo-name {
+            font-family: var(--font-title);
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(to right, #ffffff, #e5e7eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            word-break: break-all;
+        }
+
+        .repo-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .repo-footer {
+            margin-top: auto;
+        }
+
+        .repo-stats {
+            display: flex;
+            gap: 1.25rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .repo-stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .repo-stat-item i {
+            color: var(--accent-purple);
+        }
+
+        .repo-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 0.8rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: var(--transition-smooth);
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .repo-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--grad-cyan-purple);
+            opacity: 0;
+            z-index: -1;
+            transition: var(--transition-smooth);
+        }
+
+        .repo-card:hover .repo-btn {
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.15);
+        }
+
+        .repo-card:hover .repo-btn::before {
+            opacity: 1;
+        }
+
+        .repo-btn i {
+            font-size: 0.9rem;
+            transition: var(--transition-smooth);
+        }
+
+        .repo-btn:hover i {
+            transform: translateX(4px);
+        }
+
+        /* Detail Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 5, 13, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-smooth);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: rgba(15, 15, 38, 0.95);
+            border: 1px solid var(--card-border-glow);
+            border-radius: 24px;
+            width: 90%;
+            max-width: 650px;
+            padding: 3rem;
+            box-shadow: 0 25px 60px rgba(0, 242, 254, 0.25);
+            position: relative;
+            transform: translateY(30px) scale(0.95);
+            transition: var(--transition-smooth);
+            color: var(--text-primary);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .modal-close:hover {
+            color: white;
+            background: var(--accent-pink);
+            transform: rotate(90deg);
+        }
+
+        .modal-header {
+            margin-bottom: 2rem;
+        }
+
+        .modal-title {
+            font-family: var(--font-title);
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: var(--grad-cyan-purple);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .modal-body {
+            margin-bottom: 2.5rem;
+        }
+
+        .modal-body p {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .tech-badges-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-top: 1rem;
+        }
+
+        .tech-badge {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0.4rem 0.9rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 3rem 0;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .footer-logo {
+            font-family: var(--font-title);
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .footer-logo span {
+            background: var(--grad-pink-purple);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .footer-right {
+            display: flex;
+            gap: 1rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 968px) {
+            .profile-hero {
+                flex-direction: column;
+                text-align: center;
+                padding: 2.5rem;
+                gap: 2rem;
+            }
+            .profile-stats {
+                justify-content: center;
+            }
+            .profile-bio {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            nav {
+                margin-bottom: 2.5rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .profile-name {
+                font-size: 2.2rem;
+            }
+            .section-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-filter-box {
+                flex-direction: column;
+                max-width: 100%;
+            }
+            .filter-btn-group {
+                justify-content: space-between;
+            }
+            .repos-grid {
+                grid-template-columns: 1fr;
+            }
+            footer {
+                flex-direction: column;
+                text-align: center;
+            }
+            .modal-content {
+                padding: 2rem;
+            }
+            .modal-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Canvas Particle Background -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Mesh Glow Background -->
+    <div class="background-mesh"></div>
+
+    <div class="container">
+        
+        <!-- Navigation Header -->
+        <nav>
+            <div class="logo">
+                <i class="fa-brands fa-github"></i>
+                <span>JUSTIN.DEV</span>
+            </div>
+            <div class="nav-actions">
+                <button class="social-icon-btn" onclick="window.open('https://github.com/justin92102512-crypto', '_blank')" aria-label="GitHub Profile">
+                    <i class="fa-brands fa-github"></i>
+                </button>
+                <button class="theme-toggle" id="theme-toggle-btn" aria-label="切換極光主題">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Profile Hero Section -->
+        <header class="profile-hero">
+            <div class="profile-avatar-container">
+                <img src="https://avatars.githubusercontent.com/u/241228657?v=4" alt="justin92102512-crypto Profile" class="profile-avatar" onerror="this.src='https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png'">
+            </div>
+            <div class="profile-info">
+                <span class="profile-tag">
+                    <i class="fa-solid fa-shield-halved"></i> Web3 & AI Engineering
+                </span>
+                <h1 class="profile-name">justin92102512-crypto</h1>
+                <p class="profile-bio">
+                    致力於區塊鏈、人工智慧與前端自動化技術的軟體工程師。擅長以 Jupyter Notebook 進行模型實驗，並利用 JavaScript/HTML 打造流暢且極具視覺效果的網頁體驗。
+                </p>
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <span class="stat-val stat-val-gradient-1">4</span>
+                        <span class="stat-lbl">儲存庫</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-val stat-val-gradient-2">3+</span>
+                        <span class="stat-lbl">程式語言</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-val" style="color: var(--accent-cyan);">100%</span>
+                        <span class="stat-lbl">自動化建置</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Showcase Area -->
+        <main>
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fa-solid fa-shapes"></i> 探索儲存庫
+                </h2>
+                <div class="search-filter-box">
+                    <div class="search-wrapper">
+                        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                        <input type="text" id="search-input" class="search-input" placeholder="搜尋儲存庫名稱或關鍵字...">
+                    </div>
+                    <div class="filter-btn-group">
+                        <button class="filter-btn active" data-filter="all">全部</button>
+                        <button class="filter-btn" data-filter="js">JS/HTML</button>
+                        <button class="filter-btn" data-filter="jupyter">Jupyter</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Repository Cards Grid -->
+            <div class="repos-grid" id="repos-container">
+                <!-- Cards will be populated by JS -->
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <div class="footer-logo">
+                JUSTIN <span>PORTFOLIO</span>
+            </div>
+            <div>
+                © 2026 Designed and Developed autonomously by Antigravity Agent
+            </div>
+            <div class="footer-right">
+                <a href="https://github.com/justin92102512-crypto" target="_blank" style="color: var(--text-secondary); text-decoration: none;" class="social-icon-btn" aria-label="Github Link">
+                    <i class="fa-brands fa-github"></i>
+                </a>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Repository Detail Modal -->
+    <div class="modal-overlay" id="repo-modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close-btn" aria-label="Close Modal">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">專案標題</h3>
+                <span class="lang-badge" id="modal-badge">JavaScript</span>
+            </div>
+            <div class="modal-body">
+                <p id="modal-description">專案詳細說明...</p>
+                <h4 style="font-family: var(--font-title); font-size: 1.1rem; margin-bottom: 0.8rem; color: var(--text-primary);">核心技術堆疊</h4>
+                <div class="tech-badges-grid" id="modal-tech-stack">
+                    <!-- Tech badges will be inserted here -->
+                </div>
+            </div>
+            <a href="#" target="_blank" class="repo-btn" id="modal-link" style="max-width: 200px; background: var(--grad-cyan-purple);">
+                <i class="fa-brands fa-github"></i> 前往 GitHub 原始碼
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // 專案靜態資料（融合 GitHub API 回傳的資料與優化描述）
+        const reposData = [
+            {
+                id: "agentcoding",
+                name: "AgentCoding",
+                displayName: "AgentCoding",
+                description: "一個由 advanced AI 代理人全自動建置與維護的前端開發工作坊。負責託管本動態網頁，完整展示高階 AI 在網頁自動化與前端架構上的自主實踐能力。",
+                longDescription: "此儲存庫是您個人 GitHub 專案儀表板的託管中心，採用全自動化建置系統，由 AI 代理人獨立編寫與更新。本專案不僅是一個履歷與作品展示網頁，更是一個展示全自動化 AI 編程與持續交付流程 (Continuous Delivery) 的活生生範例，象徵著前沿人工智慧技術在現代軟體工程中的具體實踐成果。",
+                language: "HTML / CSS / JS",
+                langClass: "lang-web",
+                filterGroup: "js",
+                githubUrl: "https://github.com/justin92102512-crypto/AgentCoding",
+                stars: 0,
+                forks: 0,
+                techStack: ["HTML5", "Vanilla CSS", "Modern JavaScript", "GitHub Pages", "Automation", "Responsive Design"]
+            },
+            {
+                id: "homework-science",
+                name: "-",
+                displayName: "Data Science Lab (四個作業)",
+                description: "專門存放機器學習與資料科學實驗的 Jupyter Notebook，內容包含四個核心專案作業，深度探討數據清理、模型擬合與算法驗證。",
+                longDescription: "此專案包含了四個獨立且完整的數據分析與演算法實踐作業。利用 Jupyter Notebook 強大的互動性，進行機器學習模型的調優、複雜數學模型的建置以及海量數據的可視化分析。是學術探究與資料庫運算技術的完美結晶。",
+                language: "Jupyter Notebook",
+                langClass: "lang-jupyter",
+                filterGroup: "jupyter",
+                githubUrl: "https://github.com/justin92102512-crypto/-",
+                stars: 0,
+                forks: 0,
+                techStack: ["Python", "Jupyter Labs", "Pandas", "NumPy", "Scikit-Learn", "Matplotlib", "Data Analysis"]
+            },
+            {
+                id: "lin-yiting-lab",
+                name: "-_-_B12092202_-",
+                displayName: "Lin Yi-Ting Interactive Lab",
+                description: "林奕廷的 JavaScript 網頁互動實驗室。收錄了各類前端邏輯實現、動態組件設計以及交互式演算法模擬專案。",
+                longDescription: "這是一個專屬的前端與 JavaScript 網頁互動實驗基地（學號：B12092202_林奕廷）。儲存庫包含了各種創意網頁特效、互動式腳本、以及算法渲染展示，全面印證了以瀏覽器為核心的極致動態前端架構與邏輯處理能力。",
+                language: "JavaScript",
+                langClass: "lang-js",
+                filterGroup: "js",
+                githubUrl: "https://github.com/justin92102512-crypto/-_-_B12092202_-",
+                stars: 0,
+                forks: 0,
+                techStack: ["JavaScript ES6", "DOM Manipulation", "Frontend Logic", "Web Animation", "Visual Experiments"]
+            },
+            {
+                id: "ai-core",
+                name: "AI-",
+                displayName: "AI- Deep Learning Core",
+                description: "深度學習與人工智慧先鋒實驗。存放以 Python 與 Jupyter Notebook 建構的深度學習流水線、神經網路模型與數據預測實驗。",
+                longDescription: "此專案專注於人工智慧（AI）核心演算法與神經網路的探索。透過 Jupyter Notebook 環境，設計、訓練並驗證各類機器學習與深度學習模型，涵蓋數據預處理、模型收斂分析及特徵工程等先進技術，是探索下一代智能應用的研發前哨站。",
+                language: "Jupyter Notebook",
+                langClass: "lang-jupyter",
+                filterGroup: "jupyter",
+                githubUrl: "https://github.com/justin92102512-crypto/AI-",
+                stars: 0,
+                forks: 0,
+                techStack: ["Deep Learning", "TensorFlow / PyTorch", "Neural Networks", "Jupyter Notebook", "Python Scripting", "Model Training"]
+            }
+        ];
+
+        // 渲染儲存庫卡片
+        const container = document.getElementById('repos-container');
+        
+        function renderCards(filteredRepos) {
+            container.innerHTML = '';
+            if (filteredRepos.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1/-; text-align: center; padding: 4rem 2rem; color: var(--text-secondary);">
+                        <i class="fa-solid fa-magnifying-glass-minus" style="font-size: 3rem; margin-bottom: 1.5rem; color: var(--accent-purple);"></i>
+                        <h3 style="font-family: var(--font-title); color: white; margin-bottom: 0.5rem;">未找到相關儲存庫</h3>
+                        <p>請嘗試其他搜尋字詞或切換分類標籤。</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredRepos.forEach(repo => {
+                const card = document.createElement('article');
+                card.className = 'repo-card';
+                card.innerHTML = `
+                    <div class="repo-header">
+                        <div class="repo-badge-row">
+                            <span class="lang-badge ${repo.langClass}">${repo.language}</span>
+                            <div class="repo-icon-wrap">
+                                <i class="${repo.language.includes('Jupyter') ? 'fa-solid fa-book-open' : 'fa-solid fa-code'}"></i>
+                            </div>
+                        </div>
+                        <h3 class="repo-name">${repo.displayName}</h3>
+                        <p class="repo-description">${repo.description}</p>
+                    </div>
+                    <div class="repo-footer">
+                        <div class="repo-stats">
+                            <div class="repo-stat-item">
+                                <i class="fa-regular fa-star"></i>
+                                <span>${repo.stars} Stars</span>
+                            </div>
+                            <div class="repo-stat-item">
+                                <i class="fa-solid fa-code-fork"></i>
+                                <span>${repo.forks} Forks</span>
+                            </div>
+                            <div class="repo-stat-item" style="margin-left: auto;">
+                                <span style="font-size: 0.75rem; color: var(--accent-cyan); font-weight: bold;">
+                                    ${repo.techStack[0]} + ${repo.techStack[1]}
+                                </span>
+                            </div>
+                        </div>
+                        <button class="repo-btn" onclick="openDetails('${repo.id}')">
+                            <span>探索詳細架構</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // 初始化渲染
+        renderCards(reposData);
+
+        // 搜尋功能
+        const searchInput = document.getElementById('search-input');
+        let currentFilter = 'all';
+
+        function filterRepos() {
+            const query = searchInput.value.toLowerCase().trim();
+            const filtered = reposData.filter(repo => {
+                const matchesSearch = repo.displayName.toLowerCase().includes(query) || 
+                                      repo.name.toLowerCase().includes(query) || 
+                                      repo.description.toLowerCase().includes(query) ||
+                                      repo.techStack.some(t => t.toLowerCase().includes(query));
+                
+                const matchesFilter = currentFilter === 'all' || repo.filterGroup === currentFilter;
+                
+                return matchesSearch && matchesFilter;
+            });
+            renderCards(filtered);
+        }
+
+        searchInput.addEventListener('input', filterRepos);
+
+        // 分類標籤切換
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.getAttribute('data-filter');
+                filterRepos();
+            });
+        });
+
+        // 彈出視窗（Modal）邏輯
+        const modal = document.getElementById('repo-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalBadge = document.getElementById('modal-badge');
+        const modalDescription = document.getElementById('modal-description');
+        const modalTechStack = document.getElementById('modal-tech-stack');
+        const modalLink = document.getElementById('modal-link');
+
+        window.openDetails = function(repoId) {
+            const repo = reposData.find(r => r.id === repoId);
+            if (!repo) return;
+
+            modalTitle.textContent = repo.displayName;
+            modalBadge.textContent = repo.language;
+            modalBadge.className = `lang-badge ${repo.langClass}`;
+            modalDescription.textContent = repo.longDescription;
+            modalLink.href = repo.githubUrl;
+            
+            modalTechStack.innerHTML = '';
+            repo.techStack.forEach(tech => {
+                const span = document.createElement('span');
+                span.className = 'tech-badge';
+                span.textContent = tech;
+                modalTechStack.appendChild(span);
+            });
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        // ESC鍵關閉彈出視窗
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // 霓虹極光主題切換
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        themeToggleBtn.addEventListener('click', () => {
+            const currentTheme = document.body.getAttribute('data-theme');
+            if (currentTheme === 'cyber') {
+                document.body.removeAttribute('data-theme');
+                themeToggleBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i>';
+            } else {
+                document.body.setAttribute('data-theme', 'cyber');
+                themeToggleBtn.innerHTML = '<i class="fa-solid fa-moon"></i>';
+            }
+        });
+
+        // 粒子背景 Canvas 動畫
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+        
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        const particles = [];
+        const maxParticles = 60;
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = Math.random() * 0.4 - 0.2;
+                this.speedY = Math.random() * 0.4 - 0.2;
+                this.opacity = Math.random() * 0.5 + 0.1;
+                this.glowColor = Math.random() > 0.5 ? 'rgba(0, 242, 254, ' : 'rgba(255, 0, 127, ';
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x < 0 || this.x > width || this.y < 0 || this.y > height) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.glowColor + this.opacity + ')';
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = this.glowColor.includes('242') ? '#00f2fe' : '#ff007f';
+                ctx.fill();
+                ctx.shadowBlur = 0; // 重置
+            }
+        }
+
+        for (let i = 0; i < maxParticles; i++) {
+            particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            // 繪製粒子連線 (加強科技感)
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (dist < 120) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(127, 0, 255, ${0.1 * (1 - dist / 120)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+                }
+            }
+            
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+    </script>
+</body>
+</html>
